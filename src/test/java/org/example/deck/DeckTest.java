@@ -17,6 +17,17 @@ import static org.mockito.Mockito.when;
 
 class DeckTest {
 
+
+    @Test
+    void testDeck() {
+        //
+        ArrayList<Card> deck = new ArrayList<>();
+
+        Deck deckClass = new Deck();
+
+        assertEquals(52,deckClass.getDeck().size());
+    }
+
     @Test
     void getDeckTest() {
         // given

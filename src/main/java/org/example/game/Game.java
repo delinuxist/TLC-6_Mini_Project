@@ -15,6 +15,10 @@ public class Game {
           deck = new Deck();
       }
 
+    public Deck getDeck() {
+        return deck;
+    }
+
     public void startGame(int numberOfPlayers) {
          boolean flag = true;
          try {

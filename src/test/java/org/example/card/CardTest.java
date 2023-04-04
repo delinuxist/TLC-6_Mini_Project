@@ -15,14 +15,8 @@ class CardTest {
 
     @Test
     void getRandTest() {
-        // given
-        Card card = mock(Card.class);
+       Card cardTest = new Card(Rank.TWO,Suit.CLUBS);
 
-        // when
-        int result = card.getRank();
-        System.out.println(result);
-
-        // then
-        assertInstanceOf(Integer.class,result);
+       assertEquals(2,cardTest.getRank());
     }
 }

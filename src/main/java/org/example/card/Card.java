@@ -13,12 +13,6 @@ public class Card {
         return rank.getRank();
     }
 
-
-
-    public Suit getSuit() {
-        return suit;
-    }
-
     @Override
     public String toString() {
         return "Card{" +

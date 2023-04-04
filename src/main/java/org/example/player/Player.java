@@ -11,6 +11,8 @@ public class Player {
 
     private Strategy strategy;
 
+    private boolean won;
+
     private List<Card> hand = new ArrayList<>();
 
     public Player(String name) {
@@ -37,12 +39,14 @@ public class Player {
         return totalHandValue;
     }
 
-    public void updateStrategy() {
+    public void updatePlayerStatus() {
         int value = getHandValue();
         if(value < 17){
             setStrategy(Strategy.HIT);
-        } else if(value > 17){
+        } else if(value < 21) {
             setStrategy(Strategy.STICK);
+        } else if( value == 21){
+            setWon(true);
         }
     }
 
@@ -54,11 +58,22 @@ public class Player {
         return strategy;
     }
 
+    public void setWon(boolean won) {
+        this.won = won;
+    }
+
+    public boolean hasWon() {
+        return won;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
+                ", strategy=" + strategy +
                 ", hand=" + hand +
+                ", won=" + won +
+                ", handValue=" + getHandValue() +
                 '}';
     }
 }

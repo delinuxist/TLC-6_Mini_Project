@@ -21,17 +21,13 @@ public class Game {
 
     void initialCardShare() {
         for (int i = 0;i< 2;i++) {
-            cardShare();
+            for (Player player : players) {
+                player.addCard(deck.getDeck().remove(0));
+            }
         }
     }
 
-    private void cardShare() {
-        for (Player player : players) {
-            player.addCard(deck.getDeck().remove(0));
-        }
-    }
-
-    public void  shuffleDeck() {
+      public void  shuffleDeck() {
           Collections.shuffle(deck.getDeck());
       }
 

@@ -3,6 +3,8 @@ package org.example.game;
 import org.example.card.Card;
 import org.example.deck.Deck;
 import org.example.player.Player;
+import org.example.player.Strategy;
+
 import java.util.*;
 public class Game {
       private List<Player> players = new ArrayList<>();
@@ -24,6 +26,13 @@ public class Game {
             for (Player player : players) {
                 player.addCard(deck.getDeck().remove(0));
             }
+        }
+    }
+
+    public void cardShare() {
+        for (Player player : players) {
+            if (player.getStrategy() == Strategy.HIT)
+            player.addCard(deck.getDeck().remove(0));
         }
     }
 

@@ -1,22 +1,24 @@
 package org.example.game;
 
-import org.example.card.Card;
 import org.example.custom_exceptions.PlayersExceedLimit;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 class GameTest {
 
+    Game game;
+    @BeforeEach
+    void setUp() {
+        game = new Game();
+    }
+
     @Test
-    void testShuffle() {
-        // given
-        Game game = new Game();
+    void shouldCheckIfDeckCardsAreShuffled() {
 
         // when
         var clone =  game.getDeck().getDeck().clone();
@@ -27,14 +29,10 @@ class GameTest {
         assertNotEquals(clone,game.getDeck().getDeck());
 
     }
-
-    @Test
-    void testCreatePlayers() throws PlayersExceedLimit {
-        // given
-        Game mockedGame = mock(Game.class);
-
-        // when
-
+ @ParameterizedTest
+ @ValueSource(ints = {7,8,9,10})
+    void shouldThrowPlayersExceedLimitException(int number) {
+       assertThrows(PlayersExceedLimit.class,()-> game.createPlayers(number));
     }
 
 }

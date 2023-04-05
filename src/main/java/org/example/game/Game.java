@@ -1,6 +1,5 @@
 package org.example.game;
 
-import org.example.card.Card;
 import org.example.custom_exceptions.PlayersExceedLimit;
 import org.example.deck.Deck;
 import org.example.player.Player;
@@ -10,43 +9,106 @@ import java.util.*;
 public class Game {
       private List<Player> players = new ArrayList<>();
       private Deck deck;
+      private List<Player> winners = new ArrayList<>();
 
-     public Game(){
+    public List<Player> getWinners() {
+        return winners;
+    }
+
+    public Game(){
           deck = new Deck();
-      }
+    }
 
     public Deck getDeck() {
         return deck;
     }
 
     public void startGame(int numberOfPlayers) {
-         boolean flag = true;
          try {
+
              createPlayers(numberOfPlayers);
              shuffleDeck();
+             System.out.println("Round 1");
              initialCardShare();
              removeGoBustPlayers();
              assignStrategy();
-//             loop
-             for(int i=0; i < players.size(); i++ ){
-                    if (players.get(i).getStrategy() == null && players.get(i).hasWon()) {
-                        System.out.println(players.get(i));
-                        break;
-                    } else if (players.size() == 1 ) {
-                        System.out.println(players.get(0));
-                        break;
-                    }else if(checkAllStick()){
+             viewPlayers();
+             checkForPlayersWithCompleteHandValue();
+             if (winners.size() > 0) {
+                 return;
+             }
 
-                    }
-                    cardShare();
-                    removeGoBustPlayers();
-                }
+             if (allPlayersStick()){
+                 int maxValue = 0;
+                 for (Player player : players) {
+                     if (player.getHandValue() > maxValue) {
+                         maxValue = player.getHandValue();
+                         getWinners().clear();
+                         getWinners().add(player);
+                     } else if (player.getHandValue() == maxValue) {
+                         getWinners().add(player);
+                     }
+                 }
+             }
+            boolean endOfGame = false;
+             int round = 2;
+             while (!endOfGame) {
+                 System.out.println("Round " + round++);
+                 checkForPlayersWithCompleteHandValue();
+                 if (winners.size() > 0) {
+                     return;
+                 }
+                 cardShare();
+                 removeGoBustPlayers();
+                 assignStrategy();
+                 viewPlayers();
+
+                 if (allPlayersStick()){
+                    int maxValue = 0;
+                     for (Player player : players) {
+                         if (player.getHandValue() > maxValue) {
+                             maxValue = player.getHandValue();
+                             getWinners().clear();
+                             getWinners().add(player);
+                         } else if (player.getHandValue() == maxValue) {
+                             getWinners().add(player);
+                         }
+                     }
+                     endOfGame = true;
+                 }
+             }
+
+
+
+
+//             loop
+//             for(int i=0; i < players.size(); i++ ){
+//                    if (players.get(i).getStrategy() == null && players.get(i).hasWon()) {
+//                        System.out.println(players.get(i));
+//                        break;
+//                    } else if (players.size() == 1 ) {
+//                        System.out.println(players.get(0));
+//                        break;
+//                    }else if(checkAllStick()){
+//
+//                    }
+//                    cardShare();
+//                    removeGoBustPlayers();
+//                }
+
+
 
 
          } catch (PlayersExceedLimit e){
              System.out.println(e.getMessage());
          }
 
+    }
+
+    private void viewPlayers() {
+        for (Player player : players) {
+            System.out.println(player);
+        }
     }
 
     // check if someone hit 21 -- done
@@ -66,11 +128,13 @@ public class Game {
     }
 
     void removeGoBustPlayers() {
-         for(int i=0; i < players.size(); i++ ){
+        int counter = players.size();
+         for(int i=0; i < counter; i++ ){
              int value = players.get(i).getHandValue();
              if (value > 21){
                  players.remove(players.get(i));
              }
+             counter = players.size();
          }
     }
 
@@ -80,6 +144,24 @@ public class Game {
                 player.addCard(deck.getDeck().remove(0));
             }
         }
+    }
+
+    public void checkForPlayersWithCompleteHandValue() {
+        for (Player player : players) {
+            if (player.getStrategy() == null && player.hasWon()) {
+                winners.add(player);
+            }
+        }
+    }
+
+    public boolean allPlayersStick() {
+        for (Player player :
+                players) {
+            if (player.getStrategy() != Strategy.STICK) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void assignStrategy() {
@@ -102,7 +184,7 @@ public class Game {
       }
 
 
-    private void createPlayers(int numberOfPlayers) throws PlayersExceedLimit {
+    public void createPlayers(int numberOfPlayers) throws PlayersExceedLimit {
          if(numberOfPlayers >= 6 || numberOfPlayers < 1) {
              throw new PlayersExceedLimit("Players must be greater than one or less than or equal to six");
          }

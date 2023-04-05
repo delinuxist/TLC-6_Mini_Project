@@ -10,7 +10,8 @@ public class Main {
         Game game =  new Game();
         game.startGame(3);
 
-        for(Player i: game.getPlayers()){
+        System.out.println("\n\nWinners");
+        for(Player i: game.getWinners()){
             System.out.println(i);
         }
 

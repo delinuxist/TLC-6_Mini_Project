@@ -47,6 +47,7 @@ public class Player {
             setStrategy(Strategy.STICK);
         } else if( value == 21){
             setWon(true);
+            setStrategy(null);
         }
     }
 
